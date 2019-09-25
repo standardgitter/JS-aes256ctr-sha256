@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+        
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>SJCL AES-256-CTR, SHA256 demo</title>
+  <script type="text/javascript" src="sjcl.js"></script>
+  <script type="text/javascript" src="bitArray.js"></script>
+  <script type="text/javascript" src="codecString.js"></script>
+  <script type="text/javascript" src="codecHex.js"></script>
+  <script type="text/javascript" src="codecBase64.js"></script>
+  <script type="text/javascript" src="aes.js"></script>
+  <script type="text/javascript" src="ctr.js"></script>
+  <script type="text/javascript" src="sha256.js"></script>
+</head>
+<body>
+  <h1>SJCL AES-256-CTR, SHA256 demo</h1>
+  http://bitwiseshiftleft.github.com/sjcl/
+<script type="text/javascript">
+	hex=sjcl.codec.hex;//provide function fromBits/toBits
+	base64=sjcl.codec.base64;//provide function fromBits/toBits
+	function doAes256ctr_encrypt() {
+		var key = 'edd235a58a408e0fc2334cac942c21af';
+		var iv = 'd2e730833f975086589ff5ba1c956984';
+		var data = '3f8cea6d9ebd3039dddb96b0a50dc5056b84794a81cd9b455c68f2d5bd7dc9d1';
+		//for compare
+    var en_result = 'a713ee2a78e4290a81d96a43af737603a066c110b49a6cf1b0526d26e5af39ae';
+  	
+  	try {
+  			aes = new sjcl.cipher.aes(hex.toBits(key));
+        en_result = hex.fromBits(sjcl.mode.ctr.encrypt(aes, hex.toBits(data), hex.toBits(iv)));
+      } catch (e) {
+        console.error("aec-256-ctr encrypt exception"+e);
+    }
+	}
+	function doAes256ctr_decrypt() {
+		var key = 'edd235a58a408e0fc2334cac942c21af';
+		var iv = 'd2e730833f975086589ff5ba1c956984';
+		var data = 'a713ee2a78e4290a81d96a43af737603a066c110b49a6cf1b0526d26e5af39ae';
+    var de_result = '3f8cea6d9ebd3039dddb96b0a50dc5056b84794a81cd9b455c68f2d5bd7dc9d1';
+  	
+  	try {
+  			aes = new sjcl.cipher.aes(hex.toBits(key));
+        de_result = hex.fromBits(sjcl.mode.ctr.decrypt(aes, hex.toBits(data), hex.toBits(iv)));
+      } catch (e) {
+        console.error("aec-256-ctr decrypt exception"+e);
+    }
+	}
+	
+	function doSha256() {
+		var data = 'pEf68rtAr8Swhhv0dHdIhE8QjaECiDmUZjyipgx3gpsLeFMc';
+		var result = '88398385a9ed6ce0ed9b1425cfa1fb10c05b801025d53b4677ecc4c50f4feada';
+		var r = sjcl.hash.sha256.hash(data);
+		result = base64.fromBits(r);
+		result = hex.fromBits(r);
+		
+	}
+	
+	doAes256ctr_encrypt();
+	doAes256ctr_decrypt();
+	doSha256();
+	
+</script>
+</body>
+</html>
